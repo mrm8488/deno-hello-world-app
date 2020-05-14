@@ -12,7 +12,7 @@ let body = `
 
     <h1 class="center-text">
       <!-- ↓ Change "Hello world!" to something else and head on back to Begin! -->
-      Hello world! Follow me <a href="https://twitter.com/mrm8488>@mrm8488</a>
+      Hello world! Follow me <a href="https://twitter.com/mrm8488">@mrm8488</a>
     </h1>
 
     <p class="center-text">
