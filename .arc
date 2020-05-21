@@ -3,6 +3,7 @@ begin-app
 
 @http
 get /
+get /ws
 
 @tables
 data
