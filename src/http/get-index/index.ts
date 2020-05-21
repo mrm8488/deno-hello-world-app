@@ -1,73 +1,28 @@
-// TODO: modify the body object!
-let body = `
-<!doctype html>
-<html lang=en>
-  <head>
-    <meta charset=utf-8>
-    <title>Hi!</title>
-    <link rel="stylesheet" href="https://static.begin.app/starter/default.css">
-    <link href="data:image/x-icon;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" rel="icon" type="image/x-icon">
-  </head>
-  <body>
+import { acceptWebSocket, acceptable } from "https://deno.land/std/ws/mod.ts";
+import { chat } from "./chat.ts";
 
-    <h1 class="center-text">
-      <!-- ↓ Change "Hello world!" to something else and head on back to Begin! -->
-      Hello world! Follow me <a href="https://twitter.com/mrm8488">@mrm8488</a>
-    </h1>
+export async function handler(req: any) {
+  const { method, url } = req;
 
-    <p class="center-text">
-      Your <a href="https://begin.com" class="link" target="_blank">Begin</a> app is ready to go!
-    </p>
-
-  </body>
-</html>
-`
-
-export async function handler (req: object) {
-  return {
-    headers: {
-      'content-type': 'text/html; charset=utf8',
-      'cache-control': 'no-cache, no-store, must-revalidate, max-age=0, s-maxage=0'
-    },
-    body
+  if (method === "GET" && url === "/") {
+    return {
+      statusCode: 200,
+      headers: new Headers({
+        "content-type": "text/html",
+      }),
+      body: await Deno.open("./index.html"),
+    };
   }
-}
 
-// Example responses
-
-/* Forward requester to a new path
-export async function handler (req: object) {
-  return {
-    statusCode: 302,
-    headers: {
-      'location': '/about',
-      'cache-control': 'no-cache, no-store, must-revalidate, max-age=0, s-maxage=0'
+  // WebSockets Chat
+  if (method === "GET" && url === "/ws") {
+    if (acceptable(req)) {
+      return acceptWebSocket({
+        conn: req.conn,
+        bufReader: req.r,
+        bufWriter: req.w,
+        headers: req.headers,
+      }).then(chat);
     }
   }
 }
-*/
-
-/* Respond with successful resource creation
-export async function handler (req: object) {
-  return {
-    statusCode: 201,
-    headers: {
-      'content-type': 'application/json; charset=utf8',
-      'cache-control': 'no-cache, no-store, must-revalidate, max-age=0, s-maxage=0'
-    },
-    body: JSON.stringify({ok: true})
-  }
-}
-*/
-
-/* Deliver client-side JS
-export async function handler (req: object) {
-  return {
-    headers: {
-      'content-type': 'text/javascript; charset=utf8',
-      'cache-control': 'no-cache, no-store, must-revalidate, max-age=0, s-maxage=0'
-    },
-    body: 'console.log("Hello world!")',
-  }
-}
-*/
